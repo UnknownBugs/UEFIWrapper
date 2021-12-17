@@ -11,7 +11,6 @@
 #ifndef __GOP_WRAPPER_HPP__
 #define __GOP_WRAPPER_HPP__
 
-#include <defs.hpp>
 #include <wrapper/systemtable_wrapper.hpp>
 
 #define EFI_GRAPHICS_OUTPUT_PROTOCAL_GUID { \
@@ -38,15 +37,15 @@ private:
     };
 
     struct EFI_GRAPHICS_OUTPUT_MODE_INFORMATION {
-        uint32_t version;
-        uint32_t horizontalResolution;
-        uint32_t verticalResolution;
+        unsigned int version;
+        unsigned int horizontalResolution;
+        unsigned int verticalResolution;
         EFI_GRAPHICS_PIXEL_FORMAT pixelFormat;
     };
 
     struct EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE {
-        uint32_t maxMode;
-        uint32_t mode;
+        unsigned int maxMode;
+        unsigned int mode;
         EFI_GRAPHICS_OUTPUT_MODE_INFORMATION *info;
         unsigned long long sizeOfInfo;
         unsigned long long frameBufferBase;
@@ -55,14 +54,14 @@ private:
     struct EFI_GRAPHICS_OUTPUT_PROTOCOL {
         unsigned long long (*queryMode)(
             struct EFI_GRAPHICS_OUTPUT_PROTOCOL *_this,
-            uint32_t modeID,
+            unsigned int modeID,
             unsigned long long *sizeOfInfo,
             struct EFI_GRAPHICS_OUTPUT_MODE_INFORMATION* *info  // equal InfoTypePointer &itp; get back to info  
         );
 
         unsigned long long (*setMode)(
             struct EFI_GRAPHICS_OUTPUT_PROTOCOL *_this,
-            uint32_t modeID
+            unsigned int modeID
         );
 
         EFI_GRAPHICS_OUTPUT_BLT_PIXEL blt;
@@ -88,9 +87,9 @@ public:
 
     PixelFormat getPixelFormat() const;
 
-    uint32_t getHorizontalResolution() const;
+    unsigned int getHorizontalResolution() const;
 
-    uint32_t getVerticalResolution() const;
+    unsigned int getVerticalResolution() const;
 
 private:
     EGOP *_mEGOP;  // not need to free
@@ -110,11 +109,11 @@ GOP::PixelFormat GOP::getPixelFormat() const {
     return _mEGOP->mode->info->pixelFormat;
 }
 
-uint32_t GOP::getHorizontalResolution() const {
+unsigned int GOP::getHorizontalResolution() const {
     return _mEGOP->mode->info->horizontalResolution;
 }
 
-uint32_t GOP::getVerticalResolution() const {
+unsigned int GOP::getVerticalResolution() const {
     return _mEGOP->mode->info->verticalResolution;
 }
 

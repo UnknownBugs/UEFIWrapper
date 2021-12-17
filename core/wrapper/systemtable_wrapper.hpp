@@ -11,7 +11,6 @@
 #ifndef __SYSTEMTABLE_WRAPPER_HPP__
 #define __SYSTEMTABLE_WRAPPER_HPP__
 
-#include <defs.hpp>
 #include <Uefi.h>
 
 namespace UEFIWrapper {
@@ -22,6 +21,7 @@ public:
 
     using ESystemTable = EFI_SYSTEM_TABLE;
     using EGUID        = EFI_GUID;
+    using uint64_t     = unsigned long long;
 
     static void 
     init(ESystemTable * st) {
@@ -39,7 +39,7 @@ public:
     }
 
     static void *
-    allocatePool(EFI_MEMORY_TYPE poolType, uint32_t size) {
+    allocatePool(EFI_MEMORY_TYPE poolType, unsigned int size) {
         void *mPtr = nullptr;
         uint64_t status = __mST->BootServices->AllocatePool(poolType, size, (void **)&mPtr);
         if (status == 0) while (1);
@@ -47,8 +47,8 @@ public:
     }
 
     static void OutputString(wchar_t *s) {
-        // char -> uint16_t 
-      __mST->ConOut->OutputString(__mST->ConOut, (uint16_t*)s);
+        // char -> unsigned short  
+      __mST->ConOut->OutputString(__mST->ConOut, (unsigned short *)s);
     }
 
     // createevent
