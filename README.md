@@ -17,4 +17,9 @@ uefi wrapper...
 > 3.文件操作
 >
 > 4.other
->
+
+
+
+## QuickLinks
+
+[UEFI DOC](https://kagurazakakotori.github.io/ubmp-cn/)
