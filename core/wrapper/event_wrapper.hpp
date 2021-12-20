@@ -1,5 +1,5 @@
-#ifndef __UEFI_EVENT_WRAPPER_HPP__
-#define __UEFI_EVENT_WRAPPER_HPP__
+#ifndef __EVENT_WRAPPER_HPP__
+#define __EVENT_WRAPPER_HPP__
 
 namespace UEFIWrapper {
 
@@ -10,4 +10,4 @@ class Event {
 
 }; // UEFIWrapper
 
-#endif // __UEFI_EVENT_WRAPPER_HPP__
+#endif // __EVENT_WRAPPER_HPP__
