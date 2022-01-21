@@ -5,7 +5,7 @@ TOP_DIR := $(shell pwd)
 
 CXX := x86_64-w64-mingw32-g++
 CXX_FLAGS := -Wall -Wextra -e efi_main -nostdinc -nostdlib \
-        -fno-builtin -Wl,--subsystem,10
+        -fno-builtin -Wl,--subsystem,10 -fno-rtti
 
 SRC := test/debug.cpp
 
