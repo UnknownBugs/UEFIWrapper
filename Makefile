@@ -17,7 +17,7 @@ UEFIWRAPPER_LIB_INC := $(addprefix -I$(TOP_DIR)/,$(UEFIWRAPPER_LIB_INC))
 $(EFI): $(SRC)
 	@echo + $@
 	mkdir -p bin
-	$(CXX) -o $@ $(CXX_FLAGS) $(SRC) $(UEFIWRAPPER_LIB_INC)
+	$(CXX) -o $@ $(CXX_FLAGS) $(SRC) $(UEFIWRAPPER_LIB_INC) -DUEFI
 
 .PHONY : clean
 
