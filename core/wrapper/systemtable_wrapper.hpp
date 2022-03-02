@@ -46,9 +46,9 @@ public:
         return mPtr;
     }
 
-    static void OutputString(wchar_t *s) {
+    static void OutputString(unsigned short *s) {
         // char -> unsigned short  
-      __mST->ConOut->OutputString(__mST->ConOut, (unsigned short *)s);
+      __mST->ConOut->OutputString(__mST->ConOut, s);
     }
 
     // createevent
