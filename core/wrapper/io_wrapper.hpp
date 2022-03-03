@@ -9,6 +9,9 @@ namespace IO {
 
 inline static 
 void putChar(char c) {
+    if (c == '\n') {
+        putChar('\r');
+    }
     unsigned short wc = c;
     unsigned short temp[2] = {wc, '\0'};
     SystemTable::OutputString(temp);
