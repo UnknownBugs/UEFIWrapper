@@ -38,6 +38,7 @@ public:
         __mST->BootServices->LocateProtocol(protocol, registration, interface);
     }
 
+// ---> Mem
     static void *
     allocatePool(EFI_MEMORY_TYPE poolType, unsigned int size) {
         void *mPtr = nullptr;
@@ -46,11 +47,29 @@ public:
         return mPtr;
     }
 
+    static void freePool(void *mPtr) {
+        __mST->BootServices->FreePool(mPtr);
+    }
+
+// ---> Text Output
     static void OutputString(unsigned short *s) {
         // char -> unsigned short  
       __mST->ConOut->OutputString(__mST->ConOut, s);
     }
 
+    static void
+    clearScreen()  {
+        __mST->ConOut->ClearScreen(__mST->ConOut);
+    }
+
+// ---> Text Input
+
+    static unsigned long long readKeyStroke(EFI_INPUT_KEY *key) {
+        return __mST->ConIn->ReadKeyStroke(__mST->ConIn, key);
+    }
+
+
+// ---> Event
     // createevent
     static unsigned long long createEvent(unsigned int Type,
                                           unsigned long long NotifyTpl,
@@ -78,20 +97,6 @@ public:
                                            void **Event,
                                            unsigned long long *index) {
         return __mST->BootServices->WaitForEvent(numberOfEvents, Event, index);
-    }
-
-    // noblockkeyboardevent
-    static unsigned long long readKeyStroke(EFI_INPUT_KEY *key) {
-        return __mST->ConIn->ReadKeyStroke(__mST->ConIn, key);
-    }
-
-    static void freePool(void *mPtr) {
-        __mST->BootServices->FreePool(mPtr);
-    }
-
-    static void
-    clearScreen()  {
-        __mST->ConOut->ClearScreen(__mST->ConOut);
     }
 
 private:
