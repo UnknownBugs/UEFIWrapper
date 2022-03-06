@@ -7,11 +7,24 @@
 namespace UEFIWrapper {
 namespace IO {
 
+union Char {
+    char c;
+    unsigned short wC;
+
+    Char() = default;
+    Char(char _c)  : c { _c } {  }
+    Char(unsigned short _wC) : wC { _wC } {  }
+
+} __attribute__ ((packed));
+
+
 inline static 
 void putChar(char c) {
-    unsigned short wc = c;
-    unsigned short temp[2] = {wc, '\0'};
-    SystemTable::OutputString(temp);
+    if (c == '\n') {
+        putChar('\r');
+    }
+    Char temp[2] { Char(c), Char('\0') };
+    SystemTable::OutputString(&(temp[0].wC));
 }
 
 inline static
@@ -45,6 +58,18 @@ void putInteger(long long n) {
     if (strBegin >= 0) {
         putStr(str + strBegin);
     }
+}
+
+inline static 
+char getChar() {
+
+    EFI_INPUT_KEY key;
+    SystemTable::readKeyStroke(&key);
+
+    // type cast
+    Char temp(key.UnicodeChar); // temp.wC = key.UnicodeChar;
+
+    return temp.c;
 }
 
 };  // namespace IO
