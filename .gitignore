@@ -36,3 +36,6 @@
 bin/
 obj/
 .vscode/
+
+# other
+test/debug.cpp
