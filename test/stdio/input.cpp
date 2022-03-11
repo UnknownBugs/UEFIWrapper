@@ -1,9 +1,21 @@
-/*
- * @Author: SPeak Shen
- * @Date: 2022-03-03 22:17:22
- * @LastEditTime: 2022-03-03 22:17:24
- * @LastEditors: SPeak Shen
- * @Description: 
- * @FilePath: /UEFIWrapper/test/input.cpp
- * trying to hard.....
- */
+#include <UEFIWrapper.hpp>
+
+using namespace UEFIWrapper;
+
+extern "C" void
+efi_main(void *ImageHandle __attribute__((unused)), SystemTable::ESystemTable *systemTable) {
+
+    SystemTable::init(systemTable);
+    SystemTable::clearScreen();
+
+    IO::Output cout; cout.init();
+    IO::Input cin; cin.init();
+
+    cout << " Test GetChar --> " << IO::endl;
+
+    char c;
+    int cnt = 0;
+    while (cin >> c && c != 'q') {
+        cout << c << " ; cnt = " << cnt++ << IO::endl;
+    }
+}

@@ -8,12 +8,9 @@ efi_main(void *ImageHandle __attribute__((unused)), SystemTable::ESystemTable *s
     SystemTable::init(systemTable);
     SystemTable::clearScreen();
 
-    IO::putChar('E');
-    IO::putChar('\n');
+    IO::Output cout; cout.init();
 
-    IO::putStr("Hellow World!\n");
-
-    IO::putInteger(-1234567890);
+    cout << " hello world! --> " << 2022  << IO::endl;
 
     while(1);
 }
