@@ -198,11 +198,18 @@ private:
     SQueue<char, MAX_INPUT_BUFFER_SIZE> __mInputBuffer;
 
     void __getInputBuffer() {
+        __mInputState = true;
         if (!__mInputBuffer.empty()) return;
         char c;
-        while ((c = __mGetChar()) && c != CR) {
+        while (__mInputBuffer.size() < MAX_INPUT_BUFFER_SIZE && (c = __mGetChar()) && c != CR) {
             __putChar(c);
             __mInputBuffer.put(c);
+        }
+        if (__mInputBuffer.size() == MAX_INPUT_BUFFER_SIZE) {
+            c = __mGetChar();
+            __mInputBuffer.put(c);
+            // buff overflow
+            __mInputState = false;
         }
         __putChar(endl);
     }
