@@ -58,13 +58,13 @@ public: // const method
         if (__mRear >= __mFront) {
             _size = __mRear - __mFront;
         } else {
-            _size = MAX_SIZE - (__mFront - __mRear);
+            _size = MAX_SIZE + 1 - (__mFront - __mRear);
         }
         return _size;
     }
 
 private:
-    char __mQueue[MAX_SIZE + 1];
+    T __mQueue[MAX_SIZE + 1];
     unsigned int __mFront, __mRear;
 };
 
