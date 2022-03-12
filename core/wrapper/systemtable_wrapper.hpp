@@ -19,6 +19,14 @@ class SystemTable {
     
 public:
 
+    struct EventTable {
+        static EFI_EVENT WAIT_KEY;
+
+        static void init() {
+            WAIT_KEY = __mST->ConIn->WaitForKey;
+        }
+    };
+
     using ESystemTable = EFI_SYSTEM_TABLE;
     using EGUID        = EFI_GUID;
     using uint64_t     = unsigned long long;
@@ -26,6 +34,7 @@ public:
     static void 
     init(ESystemTable * st) {
         __mST = st;
+        EventTable::init();
     }
 
     static void 
@@ -81,25 +90,24 @@ public:
                                                 NotifyContext, Event);
     }
     // setTimer
-    static unsigned long long setTimer(void *Event, EFI_TIMER_DELAY Type,
-                                       unsigned long long TriggerTime) {
+    static unsigned long long 
+    setTimer(void *Event, EFI_TIMER_DELAY Type, unsigned long long TriggerTime) {
         return __mST->BootServices->SetTimer(Event, Type, TriggerTime);
     }
 
-    // blockkeyboardevent
-    static unsigned long long waitForKeyEvent(unsigned long long numberOfEvents,
-                                           unsigned long long *index) {
-        return __mST->BootServices->WaitForEvent(numberOfEvents, &(__mST->ConIn->WaitForKey), index);
+    static unsigned long long 
+    waitForEvents(void **Event, unsigned long long numberOfEvents) {
+        unsigned long long eventIndex;
+        __mST->BootServices->WaitForEvent(numberOfEvents, Event, &eventIndex);
+        return eventIndex;
     }
 
-    // blockdevent
-    static unsigned long long waitForEvent(unsigned long long numberOfEvents,
-                                           void **Event,
-                                           unsigned long long *index) {
-        return __mST->BootServices->WaitForEvent(numberOfEvents, Event, index);
+    static void waitForEvent(EFI_EVENT event) {
+        waitForEvents(&event, 1);
     }
 
 private:
+
     static EFI_SYSTEM_TABLE  *__mST;
 
 };  // SystemTable
@@ -107,5 +115,8 @@ private:
 }; // UEFIWrapper
 
 UEFIWrapper::SystemTable::ESystemTable * UEFIWrapper::SystemTable::__mST = nullptr;
+
+// event
+EFI_EVENT UEFIWrapper::SystemTable::EventTable::WAIT_KEY = nullptr;
 
 #endif

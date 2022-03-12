@@ -2,12 +2,19 @@
 #define __IO_WRAPPER_HPP__
 
 #include <wrapper/systemtable_wrapper.hpp>
-
+#include <wrapper/event_wrapper.hpp>
+#include <wrapper/sds.hpp>
 
 namespace UEFIWrapper {
 namespace IO {
 
-constexpr char endl = '\n';
+constexpr char LF = '\n';
+constexpr char CR = '\r';
+
+constexpr char endl = LF;
+
+
+constexpr unsigned int MAX_INPUT_BUFFER_SIZE = 2048 + 1;
 
 union Char {
     char c;
@@ -33,6 +40,8 @@ inline static
 char __getChar() {
 
     EFI_INPUT_KEY key;
+
+    Event::waitKeyboardEvent();
     SystemTable::readKeyStroke(&key);
 
     // type cast
@@ -87,6 +96,8 @@ public: // op
         if (n < 0) {
             __mPutChar('-');
             n = -n;
+        } else if (n == 0) {
+            operator<<('0');
         }
 
         char str[101] { };
@@ -127,6 +138,8 @@ public: // big Five
 
     void init(const GetChar &gc = __getChar) {
         __mGetChar = gc;
+        __mInputState = true;
+        __mInputBuffer.init();
     }
 
     // copy
@@ -142,17 +155,57 @@ public: // op
     Input() = default;
 
     Input & operator>>(char &c) {
-        c = __mGetChar();
+        __getInputBuffer();
+        
+        if (!__mInputBuffer.empty())
+            c = __mInputBuffer.get();
+
+        return *this;
+    }
+
+    Input & operator>>(int &n) {  operator>>(n); return *this; }
+
+    Input & operator>>(long &n) {  operator>>(n); return *this; }
+
+    Input & operator>>(long long &n) {
+        
+        __getInputBuffer();
+
+        char c = '+'; n = 0;
+        int flag = 1;
+        
+        if (!__mInputBuffer.empty()) c = __mInputBuffer.get();
+        if ('-' == c) flag = -1;
+
+        while (!__mInputBuffer.empty() && (c = __mInputBuffer.get()) && '9' >= c && '0' <= c) {
+            n = n * 10 + (c - '0');
+        }
+        
+        n *= flag;
+
         return *this;
     }
 
     operator bool() const {
-        return true;
+        return __mInputState;
     }
 
 private:
 
     GetChar __mGetChar;
+    bool __mInputState;
+    // Static Queue
+    SQueue<char, MAX_INPUT_BUFFER_SIZE> __mInputBuffer;
+
+    void __getInputBuffer() {
+        if (!__mInputBuffer.empty()) return;
+        char c;
+        while ((c = __mGetChar()) && c != CR) {
+            __putChar(c);
+            __mInputBuffer.put(c);
+        }
+        __putChar(endl);
+    }
 
 };
 
