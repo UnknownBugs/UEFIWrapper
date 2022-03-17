@@ -12,6 +12,8 @@ efi_main(void *ImageHandle __attribute__((unused)), SystemTable::ESystemTable *s
     IO::Output cout; cout.init();
     IO::Input cin; cin.init();
 
+    IO::File file;
+    
     cout << " hello world! --> " << 2022  << IO::endl;
 
     char c;
